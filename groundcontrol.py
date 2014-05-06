@@ -105,7 +105,7 @@ class Container(object):
         if service:
             return service.strip()
 
-        return self._container[CONFIG][IMAGE].split('/')[-1]
+        return self._container[CONFIG][IMAGE].split('/')[-1].split(':')[0]
 
 
 class DNS(object):
