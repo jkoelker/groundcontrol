@@ -11,6 +11,7 @@ import time
 import os
 
 import dns.message
+import dns.flags
 import dns.name
 import dns.query
 import dns.rdataclass
@@ -129,8 +130,12 @@ class DNS(object):
     def _query(self, qname, rdtype, rdclass=dns.rdataclass.IN,
                one_record=False):
         msg = dns.message.make_query(qname, rdtype, rdclass)
-        response = dns.query.tcp(msg, self._nameserver,
+        response = dns.query.udp(msg, self._nameserver,
                                  self._resolver_timeout, 53)
+
+        if response.flags & dns.flags.TC:
+            response = dns.query.tcp(msg, self._nameserver,
+                                     self._resolver_timeout, 53)
 
         if one_record:
             rrset = response.get_rrset(response.answer, qname, rdclass, rdtype)
