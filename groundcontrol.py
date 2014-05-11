@@ -352,10 +352,10 @@ def main():
                         help='environment key to skip creation. '
                              'Default: DNS_SKIP')
 
-    parser.add_argument('--update-timeout', type=float, default=20.0,
+    parser.add_argument('--update-timeout',
                         help='timeout for record updates')
 
-    parser.add_argument('--resolver-timeout', type=float, default=5.0,
+    parser.add_argument('--resolver-timeout',
                         help='timeout for record checks')
 
     parser.add_argument('-q', '--quiet', action='store_true',
@@ -386,13 +386,22 @@ def main():
         info = docker_client.inspect_container(os.environ['HOSTNAME'])
         identity = info[NAME].strip('/')
 
+    resolver_timeout = None
+    update_timeout = None
+
+    if args.resolver_timeout is not None:
+        resolver_timeout = float(args.resolver_timeout)
+
+    if args.update_timout is not None:
+        update_timeout = float(args.update_timeout)
+
     dns_client = DNS(identity=identity,
                      nameserver=args.nameserver,
                      origin=args.origin,
-                     resolver_timeout=args.resolver_timeout,
+                     resolver_timeout=resolver_timeout,
                      tsig_key_path=args.tsig_key,
                      ttl=args.ttl,
-                     update_timeout=args.update_timeout)
+                     update_timeout=update_timeout)
 
     env_ip_key = intern(args.env_ip)
     env_name_key = intern(args.env_name)
