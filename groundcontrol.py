@@ -392,7 +392,7 @@ def main():
     if args.resolver_timeout is not None:
         resolver_timeout = float(args.resolver_timeout)
 
-    if args.update_timout is not None:
+    if args.update_timeout is not None:
         update_timeout = float(args.update_timeout)
 
     dns_client = DNS(identity=identity,
