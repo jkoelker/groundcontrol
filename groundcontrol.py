@@ -7,6 +7,7 @@ eventlet.monkey_patch()
 import argparse
 import functools
 import logging
+import json
 import time
 import os
 
@@ -284,6 +285,8 @@ def monitor_dns(docker_client, dns_client, container_wrapper,
 
 def monitor_docker(docker_client, dns_client, container_wrapper):
     for event in docker_client.events():
+        event = json.loads(event)
+
         if event[STATUS] not in (START, DIE):
             continue
 
